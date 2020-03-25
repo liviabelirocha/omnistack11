@@ -7,14 +7,22 @@ import Profile from './pages/Profile';
 import NewIncident from './pages/NewIncident';
 
 function Routes() {
+    const PrivateRoute = ({ component: Component, ...rest }) => (
+        <Route {...rest} render={props => (
+            localStorage.getItem('ongID')
+                ? <Component {...props} />
+                : <Redirect to={{ pathname: '/', state: { from: props.location } }} />
+        )} />
+    )
+
     return (
         <BrowserRouter>
             <Switch>
                 <Route path="/" exact component={Logon} />
                 <Route path="/register" component={Register}/>
 
-                <Route path="/profile" component={Profile}/>
-                <Route path="/incidents/new" component={NewIncident}/>
+                <PrivateRoute path="/profile" component={Profile}/>
+                <PrivateRoute path="/incidents/new" component={NewIncident}/>
             </Switch>    
         </BrowserRouter>
     )
